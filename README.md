@@ -4,7 +4,25 @@ This project is a simple static site generator written in Python. It converts ma
 
 ## Project Structure
 
-. ├── content │ ├── index.md │ └── majesty │ └── index.md ├── public │ ├── index.html │ └── majesty │ └── index.html ├── static │ └── [static files] ├── template.html ├── src │ ├── main.py │ └── [other source files] ├── main.sh └── README.md
+```bash
+.
+├── content
+│   ├── index.md
+│   └── majesty
+│       └── index.md
+├── public
+│   ├── index.html
+│   └── majesty
+│       └── index.html
+├── static
+│   └── [static files]
+├── template.html
+├── src
+│   ├── main.py
+│   └── [other source files]
+├── main.sh
+└── README.md
+```
 
 ## Files and Directories
 
