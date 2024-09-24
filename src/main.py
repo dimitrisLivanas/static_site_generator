@@ -1,5 +1,6 @@
 import os
 from textnode import TextNode
+from markdown_to_html import markdown_to_html_node
 
 def copy_static(src, dest):
     if os.path.exists(dest):
@@ -21,6 +22,38 @@ def copy_static(src, dest):
                     fdst.write(fsrc.read())
             print(f"Copied {s} to {d}")
 
+def extract_title(markdown):
+    for line in markdown.split('\n'):
+        if line.startswith('# '):
+            return line[2:].strip()
+    raise Exception("No h1 header found")
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+
+    # Read markdown file
+    with open(from_path, 'r') as f:
+        markdown_content = f.read()
+
+    # Read template file
+    with open(template_path, 'r') as f:
+        template_content = f.read()
+
+    # Convert markdown to HTML
+    html_node = markdown_to_html_node(markdown_content)
+    html_content = html_node.to_html()
+
+    # Extract title
+    title = extract_title(markdown_content)
+
+    # Replace placeholders in template
+    full_html = template_content.replace('{{ Title }}', title).replace('{{ Content }}', html_content)
+
+    # Write the full HTML to dest_path
+    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    with open(dest_path, 'w') as f:
+        f.write(full_html)
+
 def main():
     # Existing functionality
     node = TextNode("This is a text node", "bold", "https://www.boot.dev")
@@ -30,6 +63,9 @@ def main():
     src_dir = 'static'
     dest_dir = 'public'
     copy_static(src_dir, dest_dir)
+
+    # Generate a page from content/index.md using template.html and write it to public/index.html
+    generate_page('content/index.md', 'template.html', 'public/index.html')
 
 if __name__ == "__main__":
     main()
