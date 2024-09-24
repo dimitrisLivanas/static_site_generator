@@ -88,3 +88,32 @@ def text_to_textnodes(text):
 def markdown_to_blocks(markdown):
     blocks = [block.strip() for block in markdown.split('\n\n') if block.strip()]
     return blocks
+
+def block_to_block_type(block):
+    lines = block.split('\n')
+    
+    # Check for heading
+    if lines[0].startswith('# '):
+        return 'heading'
+    for i in range(2, 7):
+        if lines[0].startswith('#' * i + ' '):
+            return 'heading'
+    
+    # Check for code block
+    if lines[0].startswith('```') and lines[-1].startswith('```'):
+        return 'code'
+    
+    # Check for quote block
+    if all(line.startswith('> ') for line in lines):
+        return 'quote'
+    
+    # Check for unordered list
+    if all(line.startswith('* ') or line.startswith('- ') for line in lines):
+        return 'unordered_list'
+    
+    # Check for ordered list
+    if all(line.startswith(f'{i+1}. ') for i, line in enumerate(lines)):
+        return 'ordered_list'
+    
+    # Default to paragraph
+    return 'paragraph'

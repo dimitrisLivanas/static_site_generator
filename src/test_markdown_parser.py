@@ -10,7 +10,8 @@ from markdown_parser import (split_nodes_delimiter,
                              split_nodes_image,
                              split_nodes_link,
                              text_to_textnodes,
-                             markdown_to_blocks)
+                             markdown_to_blocks,
+                             block_to_block_type)
 
 class TestMarkdownParser(unittest.TestCase):
     def test_split_text_with_code(self):
@@ -139,6 +140,72 @@ class TestMarkdownParser(unittest.TestCase):
         markdown = "\n\n\n\n"
         expected = []
         self.assertEqual(markdown_to_blocks(markdown), expected)
+
+    def test_markdown_to_blocks_single_block(self):
+        markdown = "This is a single block of text."
+        expected = ["This is a single block of text."]
+        self.assertEqual(markdown_to_blocks(markdown), expected)
+
+    def test_markdown_to_blocks_multiple_blocks(self):
+        markdown = "This is the first block.\n\nThis is the second block.\n\nThis is the third block."
+        expected = [
+            "This is the first block.",
+            "This is the second block.",
+            "This is the third block."
+        ]
+        self.assertEqual(markdown_to_blocks(markdown), expected)
+
+    def test_markdown_to_blocks_with_empty_lines(self):
+        markdown = "This is the first block.\n\n\n\nThis is the second block.\n\n\n\nThis is the third block."
+        expected = [
+            "This is the first block.",
+            "This is the second block.",
+            "This is the third block."
+        ]
+        self.assertEqual(markdown_to_blocks(markdown), expected)
+
+    def test_markdown_to_blocks_with_leading_and_trailing_spaces(self):
+        markdown = "   This is the first block.   \n\n   This is the second block.   \n\n   This is the third block.   "
+        expected = [
+            "This is the first block.",
+            "This is the second block.",
+            "This is the third block."
+        ]
+        self.assertEqual(markdown_to_blocks(markdown), expected)
+
+    def test_markdown_to_blocks_empty_input(self):
+        markdown = ""
+        expected = []
+        self.assertEqual(markdown_to_blocks(markdown), expected)
+
+    def test_markdown_to_blocks_only_newlines(self):
+        markdown = "\n\n\n\n"
+        expected = []
+        self.assertEqual(markdown_to_blocks(markdown), expected)
+
+    def test_block_to_block_type_paragraph(self):
+        block = "This is a paragraph."
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_heading(self):
+        block = "# This is a heading"
+        self.assertEqual(block_to_block_type(block), "heading")
+
+    def test_block_to_block_type_code(self):
+        block = "```\nThis is a code block\n```"
+        self.assertEqual(block_to_block_type(block), "code")
+
+    def test_block_to_block_type_quote(self):
+        block = "> This is a quote\n> block"
+        self.assertEqual(block_to_block_type(block), "quote")
+
+    def test_block_to_block_type_unordered_list(self):
+        block = "* Item 1\n* Item 2\n- Item 3"
+        self.assertEqual(block_to_block_type(block), "unordered_list")
+
+    def test_block_to_block_type_ordered_list(self):
+        block = "1. Item 1\n2. Item 2\n3. Item 3"
+        self.assertEqual(block_to_block_type(block), "ordered_list")
 
 if __name__ == "__main__":
     unittest.main()
