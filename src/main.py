@@ -54,6 +54,15 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, 'w') as f:
         f.write(full_html)
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for root, dirs, files in os.walk(dir_path_content):
+        for file in files:
+            if file.endswith('.md'):
+                from_path = os.path.join(root, file)
+                relative_path = os.path.relpath(from_path, dir_path_content)
+                dest_path = os.path.join(dest_dir_path, relative_path).replace('.md', '.html')
+                generate_page(from_path, template_path, dest_path)
+
 def main():
     # Existing functionality
     node = TextNode("This is a text node", "bold", "https://www.boot.dev")
@@ -64,8 +73,8 @@ def main():
     dest_dir = 'public'
     copy_static(src_dir, dest_dir)
 
-    # Generate a page from content/index.md using template.html and write it to public/index.html
-    generate_page('content/index.md', 'template.html', 'public/index.html')
+    # Generate pages recursively
+    generate_pages_recursive('content', 'template.html', 'public')
 
 if __name__ == "__main__":
     main()
