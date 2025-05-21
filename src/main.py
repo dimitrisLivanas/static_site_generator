@@ -77,11 +77,11 @@ def main():
 
     # New functionality to copy static files
     src_dir = 'static'
-    dest_dir = 'public'
+    dest_dir = 'docs'
     copy_static(src_dir, dest_dir)
 
     # Generate pages recursively
-    generate_pages_recursive('content', 'template.html', 'public', basepath)
+    generate_pages_recursive('content', 'template.html', 'docs', basepath)
 
 if __name__ == "__main__":
     main()
