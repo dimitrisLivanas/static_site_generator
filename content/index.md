@@ -2,7 +2,7 @@
 
 **I like Tolkien**. Read my [first post here](/majesty)
 
-> All that is gold does not glitter
+> "I am in fact a Hobbit in all but size."
 
 ## Reasons I like Tolkien
 
